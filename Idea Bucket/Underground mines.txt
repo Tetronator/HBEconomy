@@ -1,0 +1,7 @@
+Underground mines using the new world builder on a new island
+
+14:43] Nighthawk: @Being_Bright Could you make a mine that goes udnerground in the world editor on a new island?
+[14:43] Being_Bright: depending on how the island is made
+[14:44] Being_Bright: if its a terrain then no
+[14:44] Being_Bright: but if ist a mesh lik water resort
+[14:44] Being_Bright: then yes
