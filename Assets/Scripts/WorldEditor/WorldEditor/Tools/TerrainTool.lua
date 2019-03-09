@@ -123,7 +123,7 @@ TerrainTool.Inspector = {
       print("Apply Normalmap")
       TerrainTool.ApplyNormal()
     end
-  }--[[ ,
+  } --[[ ,
   {
     name = "Apply LOD Mesh",
     tooltip = "Apply the LOD mesh to the terrain",
@@ -143,7 +143,18 @@ TerrainTool.Settings = {
   heightmapResolution = 513
 }
 
+function TerrainTool:OnEnableTool()
+  if SelectTool then
+    SelectTool.rectSelectionEnabled = true
+    SelectTool.updateInspectorEnabled = false
+  end
+end
+
 function TerrainTool:OnDisableTool()
+  if SelectTool then
+    SelectTool.rectSelectionEnabled = true
+    SelectTool.updateInspectorEnabled = true
+  end
 end
 
 function TerrainTool:Awake()
@@ -157,11 +168,6 @@ function TerrainTool:Start()
 end
 
 function TerrainTool:Update()
-  if SelectTool then
-    SelectTool.rectSelectionEnabled = true
-    SelectTool.enabled = true
-    SelectTool.updateInspectorEnabled = false
-  end
 end
 
 function TerrainTool:OnDestroy()

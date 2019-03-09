@@ -3,7 +3,7 @@ AssetBaker = {}
 -----------------------------------------------
 --baking
 -----------------------------------------------
-function AssetBaker:Bake(hardBake)
+function AssetBaker:Bake()
   -----------------------------------------------
   --clone current assembly
   -----------------------------------------------
@@ -129,7 +129,6 @@ function AssetBaker:FixColliders(assembly)
   local allPartContainers = iter(assembly:GetComponentsInChildren("PartContainer"))
   for i, partContainer in ipairs(allPartContainers) do
     local allMeshColliders = iter(partContainer:GetComponentsInChildren("UnityEngine.MeshCollider"))
-
     if HBBuilder.BuilderUtils.GetStringData(partContainer.stringData, "isBoxCollider") == "true" then
       --destroy mesh coliders
       for o, meshCollider in ipairs(allMeshColliders) do

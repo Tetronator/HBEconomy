@@ -12,7 +12,16 @@ rb.drag = 0
 rb.isKinematic=true
 print(rb)
 end
+
+for obj in Slua.iter(HBBuilder.Builder.selection) do
+    local rb = obj.gameObject:GetComponent("HBSupply")
+    if not rb and Slua.IsNull(rb) then
+        rb = obj.gameObject:AddComponent("HBSupply")
+    end
+    print(rb)
+end
 ]]
+
 WorldEditor = {}
 
 -----------------------------------------------------------------
@@ -47,7 +56,9 @@ WorldEditor.Scripts = {
     {official = true, path = "ModLua/WorldEditor/Tools/TerrainTool.lua"},
     {official = true, path = "ModLua/WorldEditor/Tools/PaintTool.lua"},
     {official = true, path = "ModLua/WorldEditor/Tools/WorldController.lua"},
-    {official = true, path = "ModLua/WorldEditor/Tools/ChangeMaterialTool.lua"}
+    {official = true, path = "ModLua/WorldEditor/Tools/ChangeMaterialTool.lua"},
+    {official = true, path = "ModLua/WorldEditor/Tools/AdjustTool.lua"},
+    --    {official = true, path = "ModLua/WorldEditor/Tools/ComponentTool.lua"}
     --{official = true, path = "ModLua/WorldEditor/Tools/RaceTrackBuilder.lua"},
     --{official = true, path = "ModLua/WorldEditor/Tools/TrackBuilder.lua"},
 }
@@ -230,7 +241,8 @@ WorldEditor.ToolSpaces = {
     {after = "Select Tool", flexSpace = Vector2(0.02, 0)},
     {after = "Scale Tool", flexSpace = Vector2(0.02, 0)},
     {after = "Material Changer", flexSpace = Vector2(0.02, 0)},
-    {after = "Terrain Tool", flexSpace = Vector2(1, 0)}
+    {after = "Terrain Tool", flexSpace = Vector2(0.02, 0)},
+    {after = "Adjust Tool", flexSpace = Vector2(1, 0)}
 }
 
 WorldEditor.AudioConfig = {

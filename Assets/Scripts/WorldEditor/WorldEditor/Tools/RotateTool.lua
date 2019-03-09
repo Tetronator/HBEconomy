@@ -64,7 +64,6 @@ function RotateTool:Update()
   --part selection while doing this stuff
   if SelectTool then
     SelectTool.rectSelectionEnabled = true
-    SelectTool.enabled = true
     SelectTool.updateInspectorEnabled = false
   end
 

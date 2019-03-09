@@ -101,6 +101,14 @@ function AddTool:OnEnableTool()
     WorldEditor.browserBar:SetActive(true)
     HBBuilder.Builder.TriggerCallback(HBBuilder.BuilderCallback.RefreshUIIndicators)
   end
+
+  if SelectTool then
+    SelectTool.updateInspectorEnabled = false
+    SelectTool.selectionEnabled = false
+    SelectTool.rectSelectionEnabled = false
+    SelectTool.clickSelectionEnabled = false
+    SelectTool.copyPasteEnabled = false
+  end
 end
 
 function AddTool:OnDisableTool()
@@ -112,7 +120,11 @@ function AddTool:OnDisableTool()
     WorldEditor.partsBar:SetActive(false)
   end
   if SelectTool then
+    SelectTool.updateInspectorEnabled = true
     SelectTool.selectionEnabled = true
+    SelectTool.rectSelectionEnabled = true
+    SelectTool.clickSelectionEnabled = true
+    SelectTool.copyPasteEnabled = true
   end
   self:DestroyPlaceIcon()
 end
@@ -162,11 +174,6 @@ function AddTool:Update()
   --stop of tool is not selected
   if not self or not self.enabled then
     return
-  end
-
-  --no selection while doing this stuff
-  if SelectTool then
-    SelectTool.selectionEnabled = false
   end
 
   --check for grabbing a part
