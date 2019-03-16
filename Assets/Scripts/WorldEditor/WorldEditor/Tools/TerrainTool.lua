@@ -201,7 +201,7 @@ function TerrainTool.MakeTerrain()
 end
 
 function TerrainTool.EditSize(size)
-  local terrains = WorldEditor.GetAllTerrain()
+  local terrains = TerrainTool.GetTerrain()
   for k, ter in pairs(terrains) do
     ter.terrainData.size =
       Vector3(TerrainTool.Settings.terrainSize, ter.terrainData.size.y, TerrainTool.Settings.terrainSize)
@@ -209,21 +209,21 @@ function TerrainTool.EditSize(size)
 end
 
 function TerrainTool.EditHeight(height)
-  local terrains = WorldEditor.GetAllTerrain()
+  local terrains = TerrainTool.GetTerrain()
   for k, ter in pairs(terrains) do
     ter.terrainData.size = Vector3(ter.terrainData.size.x, height, ter.terrainData.size.z)
   end
 end
 
 function TerrainTool.EditResolution(res)
-  local terrains = WorldEditor.GetAllTerrain()
+  local terrains = TerrainTool.GetTerrain()
   for k, ter in pairs(terrains) do
     ter.terrainData.heightmapResolution = res
   end
 end
 
 function TerrainTool.EditName(name)
-  local terrains = WorldEditor.GetAllTerrain()
+  local terrains = TerrainTool.GetTerrain()
   for k, ter in pairs(terrains) do
     ter.gameObject.name = name
   end
@@ -235,7 +235,7 @@ function TerrainTool.ApplyRAW()
     print("No File Selected")
     return
   end
-  local terrains = WorldEditor.GetAllTerrain()
+  local terrains = TerrainTool.GetTerrain()
   for k, v in pairs(terrains) do
     --TerrainUtils.Raw32ToTerrain(file, v)
     echo(Terrains.Raw16ToTerrain(file, v))
@@ -284,10 +284,21 @@ function TerrainTool.ApplyLOD()
     print("No File Selected")
     return
   end
-  local terrains = WorldEditor.GetAllTerrain()
+  local terrains = TerrainTool.GetTerrain()
   for k, v in pairs(terrains) do
     TerrainUtils.LODMeshToTerrain(file, v)
   end
+end
+
+function TerrainTool.GetTerrain()
+  ter = {}
+  for part in Slua.iter(HBBuilder.Builder.selection) do
+    local terrain = part.gameObject:GetComponent("Terrain")
+    if terrain and not Slua.IsNull(terrain) then
+      table.insert(ret, ter)
+    end
+  end
+  return ter
 end
 
 return TerrainTool

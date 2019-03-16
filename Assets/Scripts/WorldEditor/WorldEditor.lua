@@ -21,7 +21,6 @@ for obj in Slua.iter(HBBuilder.Builder.selection) do
     print(rb)
 end
 ]]
-
 WorldEditor = {}
 
 -----------------------------------------------------------------
@@ -57,7 +56,7 @@ WorldEditor.Scripts = {
     {official = true, path = "ModLua/WorldEditor/Tools/PaintTool.lua"},
     {official = true, path = "ModLua/WorldEditor/Tools/WorldController.lua"},
     {official = true, path = "ModLua/WorldEditor/Tools/ChangeMaterialTool.lua"},
-    {official = true, path = "ModLua/WorldEditor/Tools/AdjustTool.lua"},
+    {official = true, path = "ModLua/WorldEditor/Tools/AdjustTool.lua"}
     --    {official = true, path = "ModLua/WorldEditor/Tools/ComponentTool.lua"}
     --{official = true, path = "ModLua/WorldEditor/Tools/RaceTrackBuilder.lua"},
     --{official = true, path = "ModLua/WorldEditor/Tools/TrackBuilder.lua"},
@@ -263,7 +262,6 @@ WorldEditor.AudioConfig = {
 
 WorldEditor.hasChanged = false
 
---PrintHierarchy(HBBuilder.Builder.root)
 -----------------------------------------------------------------
 --  Static Function
 -----------------------------------------------------------------
@@ -614,6 +612,20 @@ function WorldEditor.Open()
     local path, cancel = HBBuilder.BuilderUtils.OpenFile(str, "hbp", Slua.out, Slua.out)
     if not cancel then
         WorldEditor.New()
+        local FolderPath = Application.streamingAssetsPath .. "/MyWorld/Assets/WorldEditor/"
+        local pinnedPath = FolderPath .. HBU.GetFileNameWithoutExtension(path) .. ".hbm"
+        if HBU.FileExists(pinnedPath) then
+            local xml = HBU.XmlElements(HBU.XmlLoad(pinnedPath), "World")
+            local pos = Vector3.zero
+            for v in Slua.iter(xml) do
+                local x = HBU.StringToNumber(v:Attribute(Slua.GetClass("System.Xml.Linq.XName").Get("x")).Value)
+                local y = HBU.StringToNumber(v:Attribute(Slua.GetClass("System.Xml.Linq.XName").Get("y")).Value)
+                local z = HBU.StringToNumber(v:Attribute(Slua.GetClass("System.Xml.Linq.XName").Get("z")).Value)
+                pos = Vector3(x, y, z)
+            end
+            HBBuilder.Builder.root.transform.position = HBU.GetLocalPosition(pos)
+        end
+
         HBBuilder.Builder.lastOpenedProjectPath = path
         HBBuilder.Builder.UnSerialize(path)
         WorldEditor.TerrainParent = HBBuilder.Builder.currentAssembly.transform:Find("TERRAIN")
@@ -1018,7 +1030,7 @@ end
 
 function WorldEditor.ReloadWorld()
     for k, ter in pairs(WorldEditor.Settings.CustomTerrain) do
-        GameObject.Destroy(ter)
+        GameObject.Destroy(ter.gameObject)
     end
 
     HBU.RebuildWorldSectors()
@@ -1064,6 +1076,7 @@ end
 -----------------------------------------------------------------
 --  Self Function
 -----------------------------------------------------------------
+
 -----------------------------------------------------------------
 --  Unity calls
 -----------------------------------------------------------------
@@ -1224,31 +1237,6 @@ function GetTableValue(tab, val)
     end
 
     return nil
-end
-
-function PrintHierarchy(gObj, depth)
-    if not depth then
-        depth = 0
-    end
-    if depth == 0 then
-        print(gObj.name)
-    end
-
-    depth = depth + 1
-
-    for child in Slua.iter(gObj.transform) do
-        local spacing = ""
-
-        for i = 1, depth do
-            spacing = spacing .. "    "
-        end
-
-        if child.name ~= "RotationDisc(Clone)" then
-            print(string.format("%s|_ %s", spacing, child.name))
-        end
-
-        PrintHierarchy(child, depth)
-    end
 end
 
 return WorldEditor
